@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Yoga Guide — 15 Poses</title>
+  <style>
+    /* -------- Base / Theme -------- */
+    :root{
+      --bg:#f3f5f7;           /* light grey page */
+      --panel:#e8f0fb;        /* light blue panel */
+      --panel-2:#eef5ff;      /* even lighter */
+      --ink:#233044;          /* primary text */
+      --muted:#5e6a7a;        /* secondary text */
+      --primary:#2d7ff9;      /* buttons */
+      --accent:#9ec6ff;       /* accents */
+      --danger:#d94a4a;       /* back button */
+      --ring:rgba(45,127,249,.25);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--ink);overflow:hidden}
+    img{max-width:100%;display:block}
+    button{font:inherit}
+    .hidden{display:none}
+
+    /* -------- Shell / Interfaces -------- */
+    .interface{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .7s ease}
+
+    /* -------- Interface 1 (Intro) -------- */
+    #interface1{position:relative;background:var(--bg)}
+    /* watermark */
+    #interface1::before{content:"";position:absolute;inset:0;background:url('https://static.vecteezy.com/system/resources/previews/013/643/187/original/silhouette-of-woman-exercising-meditation-yoga-silhouette-illustration-vector.jpg') no-repeat center;filter:grayscale(1);opacity:.08;background-size:min(60vmin,720px);}
+    .hero{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:20px}
+    .logo{width:120px;height:120px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(180deg,#d7e9ff,#c7ddff);box-shadow:0 8px 24px rgba(0,0,0,.15)}
+    .logo span{font-size:44px}
+    h1{margin:0;font-size:clamp(32px,5vw,48px);letter-spacing:2px;color:#0d3a66}
+    .start-btn{padding:14px 30px;border:0;border-radius:999px;background:var(--primary);color:#fff;cursor:pointer;transform:translateZ(0);transition:transform .25s ease,box-shadow .25s ease}
+    .start-btn:hover{transform:scale(1.05)}
+    .start-btn:active{transform:scale(.97)}
+    /* click animation ripple */
+    .start-btn.ripple{box-shadow:0 0 0 0 var(--ring);animation:ripple .6s forwards}
+    @keyframes ripple{to{box-shadow:0 0 0 18px rgba(45,127,249,0)}}
+
+    /* -------- Interface 2 (Library) -------- */
+    #interface2{flex-direction:row;gap:0;padding:clamp(8px,1.5vw,20px);opacity:0;pointer-events:none}
+
+    /* Left list */
+    .yoga-list{width:28%;max-width:420px;min-width:240px;height:100%;overflow:auto;background:var(--panel);border:1px solid #cfe0ff;border-radius:16px;padding:8px}
+    .yoga-item{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;cursor:pointer;transition:background .2s ease}
+    .yoga-item:hover{background:#d7e7ff}
+    .yoga-item img{width:44px;height:44px;object-fit:cover;border-radius:8px;flex:0 0 44px}
+    .yoga-item .title{font-weight:700}
+    .yoga-item .sub{font-size:12px;color:var(--muted)}
+
+    /* Right portal */
+    .yoga-portal{position:relative;flex:1;height:100%;display:flex;flex-direction:column;gap:12px;background:var(--panel-2);border:1px solid #d6e4ff;border-radius:16px;padding:clamp(10px,2vw,20px);overflow:auto}
+    .pose-img{align-self:center;width:min(860px,92%);border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,.08);cursor:pointer}
+    .steps{width:min(860px,92%);margin-inline:auto;background:#fff;border:1px solid #ebf0f7;border-radius:14px;padding:16px 18px;box-shadow:0 6px 16px rgba(0,0,0,.05)}
+    .steps h2{margin:0 0 8px 0;font-size:18px;color:#143a6b}
+    .steps ol{margin:0;padding-left:18px;line-height:1.5}
+
+    /* info button + popup */
+    .info-btn{position:absolute;top:12px;right:12px;background:var(--primary);color:#fff;border:0;border-radius:10px;padding:8px 12px;cursor:pointer}
+    .info-box{position:absolute;top:54px;right:-320px;width:min(320px,85vw);background:#fff;border:1px solid #d6e4ff;border-radius:14px;box-shadow:0 12px 30px rgba(0,0,0,.12);padding:14px 16px;transition:right .45s ease}
+    .info-box.show{right:12px}
+    .info-box h3{margin:.25rem 0 .5rem 0;color:#0f3c75}
+    .info-box h4{margin:.5rem 0 .25rem 0;color:#244b82}
+    .info-box ul{margin:.25rem 0 .5rem 0;padding-left:18px}
+
+    /* -------- Interface 3 (Image zoom) -------- */
+    #interface3{background:rgba(10,20,30,.85);backdrop-filter:blur(2px);opacity:0;pointer-events:none}
+    .zoom-card{max-width:min(92vw,980px);max-height:92vh;display:flex;flex-direction:column;align-items:center;gap:12px;background:#fff;border-radius:16px;padding:16px}
+    #stepImage{max-height:70vh;width:auto;border-radius:12px}
+    #stepDesc{margin:0;color:#2a3d56}
+    .back-btn{padding:10px 18px;border:0;border-radius:10px;background:var(--danger);color:#fff;cursor:pointer}
+
+    /* -------- Responsive tweaks -------- */
+    @media (max-width:900px){
+      .yoga-list{width:36%}
+    }
+    @media (max-width:720px){
+      #interface2{flex-direction:column}
+      .yoga-list{width:100%;max-width:none;min-width:0;height:40%}
+      .yoga-portal{height:60%}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- -------- Interface 1 -------- -->
+  <section id="interface1" class="interface">
+    <div class="hero">
+      <div class="logo"><span>🧘‍♀️</span></div>
+      <h1>YOGA</h1>
+      <button class="start-btn" id="startBtn">Let's Start</button>
+    </div>
+  </section>
+
+  <!-- -------- Interface 2 -------- -->
+  <section id="interface2" class="interface hidden">
+    <aside class="yoga-list" id="yogaList"></aside>
+    <main class="yoga-portal">
+      <button class="info-btn" id="infoToggle">ℹ️ Info</button>
+      <img id="poseImg" class="pose-img" src="" alt="Select a pose from the list" />
+      <article class="steps" id="stepsBox">
+        <h2>Select a yoga posture from the list</h2>
+        <ol></ol>
+      </article>
+      <div id="infoBox" class="info-box"></div>
+    </main>
+  </section>
+
+  <!-- -------- Interface 3 (popup) -------- -->
+  <section id="interface3" class="interface hidden">
+    <div class="zoom-card">
+      <img id="stepImage" src="" alt="Yoga Pose" />
+      <p id="stepDesc"></p>
+      <button class="back-btn" id="backBtn">Back</button>
+    </div>
+  </section>
+
+<script>
+// ---------- Data: 15 Poses (name, image, steps, benefits, best time, uses) ----------
+const POSES = [
+  {
+    nameEN:"Mountain Pose",
+    nameSA:"Tadasana",
+    img:"https://tse2.mm.bing.net/th/id/OIP.XLsyxM0rFXigMwlMwYCkwgHaJb?pid=Api&P=0&h=180",
+    steps:[
+      "Stand with big toes touching, heels slightly apart; arms relaxed at sides.",
+      "Spread toes and distribute weight evenly across both feet.",
+      "Engage thighs, lift kneecaps gently, and lengthen through the spine.",
+      "Broaden collarbones, let shoulders soften down and back; palms face forward.",
+      "Gaze straight ahead; breathe steadily for 30–60 seconds."
+    ],
+    benefits:["Improves posture and alignment","Builds awareness of balance","Strengthens legs and core stability","Can relieve sciatica when practiced correctly"],
+    best:"Morning or anytime for grounding",
+    uses:["Centering before a sequence","Posture awareness training"]
+  },
+  {
+    nameEN:"Tree Pose",
+    nameSA:"Vṛkṣāsana",
+    img:"https://tse1.mm.bing.net/th/id/OIP.P8fILvtqrugbLrQFdKL6-QHaHa?pid=Api&P=0&h=180",
+    steps:[
+      "From Tadasana, shift weight into the left foot and firm the thigh.",
+      "Place right sole on inner left calf or thigh (avoid the knee).",
+      "Find a steady point to look at; hands to heart.",
+      "On an inhale, raise arms overhead; keep hips square forward.",
+      "Hold 30–45 seconds; switch sides."
+    ],
+    benefits:["Enhances balance and focus","Strengthens ankles, calves and thighs","Opens hips gently"],
+    best:"Morning or pre-practice to build focus",
+    uses:["Balance training","Mindfulness and concentration"]
+  },
+  {
+    nameEN:"Cobra Pose",
+    nameSA:"Bhujangāsana",
+    img:"https://tse2.mm.bing.net/th/id/OIP.e8_TgOSftKGrOV2T4ZEuZAHaE8?pid=Api&P=0&h=180",
+    steps:[
+      "Lie prone; legs long, tops of feet on mat; place palms under shoulders.",
+      "Press pubic bone down; on inhale pull chest forward and up.",
+      "Keep elbows close to ribs; broaden across collarbones.",
+      "Lift only to a comfortable height; avoid compressing lower back.",
+      "Hold 15–30 seconds with smooth breaths; release on exhale."
+    ],
+    benefits:["Strengthens spinal extensors","Opens chest and lungs","Invigorates and improves posture"],
+    best:"Morning or mid‑day to energize (empty/light stomach)",
+    uses:["Back‑bend prep","Counterpose after forward bends"]
+  },
+  {
+    nameEN:"Downward-Facing Dog",
+    nameSA:"Adho Mukha Śvānāsana",
+    img:"https://tse1.mm.bing.net/th/id/OIP.CCkUgNiDhIBsegr8HJwZTgHaE8?pid=Api&P=0&h=180",
+    steps:[
+      "Start on hands and knees; wrists under shoulders, knees under hips.",
+      "Spread fingers, press through palms; tuck toes and lift knees.",
+      "Send hips up and back; lengthen spine, draw ribs in.",
+      "Gently pedal heels toward floor; keep a micro-bend in knees if tight.",
+      "Hold 30–60 seconds, breathing evenly."
+    ],
+    benefits:["Stretches hamstrings and calves","Lengthens spine and shoulders","Builds upper‑body strength","Energizes the whole body"],
+    best:"Morning or as a reset during the day",
+    uses:["Transition pose in Sun Salutations","Full‑body stretch"]
+  },
+  {
+    nameEN:"Warrior I",
+    nameSA:"Vīrabhadrāsana I",
+    img:"https://www.arhantayoga.org/wp-content/uploads/2023/09/Warrior-1-Pose-.jpg",
+    steps:[
+      "From Down Dog, step right foot forward between hands; back heel down 45°.",
+      "Square hips forward; front knee over ankle.",
+      "On inhale sweep arms up; lengthen through sides of waist.",
+      "Press outer edge of back foot firmly; lift chest.",
+      "Hold 30–45 seconds; repeat left."
+    ],
+    benefits:["Strengthens legs and glutes","Opens hip flexors and chest","Improves stability and stamina"],
+    best:"Morning or before strength sequences",
+    uses:["Sun Salutation B component","Building lower‑body strength"]
+  },
+  {
+    nameEN:"Warrior II",
+    nameSA:"Vīrabhadrāsana II",
+    img:"https://www.arhantayoga.org/wp-content/uploads/2023/09/Warrior-2-Pose-.jpg",
+    steps:[
+      "From a wide stance, turn right toes out 90°; left toes slightly in.",
+      "Bend right knee to stack over ankle; press outer left foot down.",
+      "Extend arms parallel to floor; gaze softly over right fingertips.",
+      "Keep torso centered; lengthen tailbone; breathe.",
+      "Hold 30–45 seconds; switch sides."
+    ],
+    benefits:["Builds leg and core endurance","Opens hips and chest","Improves concentration"],
+    best:"Anytime; great mid‑sequence for strength",
+    uses:["Standing series foundation","Focus training"]
+  },
+  {
+    nameEN:"Triangle Pose",
+    nameSA:"Trikoṇāsana",
+    img:"https://tse2.mm.bing.net/th/id/OIP.DoCibVQheGTbdObdoSSiXwHaHZ?pid=Api&P=0&h=180",
+    steps:[
+      "From wide stance, turn right toes out; left toes slightly in.",
+      "Inhale lengthen; exhale hinge at right hip, reach right hand forward.",
+      "Place right hand to shin/block; extend left arm to sky.",
+      "Roll left shoulder back; lengthen both sides of torso.",
+      "Hold 30–45 seconds; breathe; repeat other side."
+    ],
+    benefits:["Stretches hamstrings and side body","Opens hips and chest","Strengthens legs"],
+    best:"Late morning or afternoon when warm",
+    uses:["Hamstring/side‑body opener","Posture alignment work"]
+  },
+  {
+    nameEN:"Bridge Pose",
+    nameSA:"Setu Bandhāsana",
+    img:"https://cdn1.iconfinder.com/data/icons/yoga-pose-set-2-3/600/bridge-Setu-Bandhasana-yoga-pose-exercise-512.png",
+    steps:[
+      "Lie on back; bend knees, feet hip‑width close to sitting bones.",
+      "Press feet and arms; on inhale lift hips.",
+      "Roll shoulders under; interlace fingers or keep palms flat.",
+      "Keep knees tracking forward; lengthen tailbone toward knees.",
+      "Hold 30–60 seconds; exhale to lower."
+    ],
+    benefits:["Strengthens posterior chain","Opens chest and hip flexors","Can relieve mild backache"],
+    best:"Evening or after sitting long hours",
+    uses:["Back‑bend prep","Countering desk posture"]
+  },
+  {
+    nameEN:"Seated Forward Bend",
+    nameSA:"Paścimottānāsana",
+    img:"https://www.rishikulyogshala.org/blog/wp-content/uploads/2024/07/image-1038.png",
+    steps:[
+      "Sit with legs extended; flex feet; sit tall on sit bones.",
+      "Inhale reach arms up; exhale hinge from hips to lengthen over legs.",
+      "Hold shins/feet/strap; keep spine long (avoid rounding).",
+      "Relax shoulders and jaw; breathe into back body.",
+      "Hold 45–90 seconds; release slowly."
+    ],
+    benefits:["Stretches hamstrings and spine","Calms the nervous system","Aids digestion"],
+    best:"Evening or after practice as a cool‑down",
+    uses:["Forward‑bend sequence","Relaxation and introspection"]
+  },
+  {
+    nameEN:"Boat Pose",
+    nameSA:"Navāsana",
+    img:"https://thumbs.dreamstime.com/b/art-illustration-196945263.jpg",
+    steps:[
+      "Sit, knees bent; hold behind thighs; lift chest.",
+      "Lean back slightly and lift feet, shins parallel to floor.",
+      "Option: straighten legs to a V; reach arms forward.",
+      "Draw lower belly in; keep spine long and chest open.",
+      "Hold 20–40 seconds; breathe steadily."
+    ],
+    benefits:["Strengthens core and hip flexors","Improves balance and stamina","Supports healthy posture"],
+    best:"Morning or early practice for core activation",
+    uses:["Core strengthening","Preparation for arm balances"]
+  },
+  {
+    nameEN:"Plank Pose",
+    nameSA:"Phalakāsana",
+    img:"https://adventureyogaonline.com/wp-content/uploads/2020/07/phalakasana-1024x576.jpg",
+    steps:[
+      "From hands and knees, step feet back to a straight line head‑to‑heels.",
+      "Wrists under shoulders; press floor away; broaden upper back.",
+      "Draw ribs in; engage glutes and legs; keep neck neutral.",
+      "Hold 20–45 seconds with even breaths; lower to rest as needed."
+    ],
+    benefits:["Builds full‑body strength","Stabilizes core and shoulders","Prepares for arm balances"],
+    best:"Anytime; great in warm‑up sequences",
+    uses:["Strength & conditioning","Transition to Chaturanga"]
+  },
+  {
+    nameEN:"Child's Pose",
+    nameSA:"Bālāsana",
+    img:"https://adventureyogaonline.com/wp-content/uploads/2021/03/balasana-1024x576.jpg",
+    steps:[
+      "From kneeling, sit back on heels; big toes touch, knees together or wide.",
+      "Fold torso over thighs; extend arms forward or rest by sides.",
+      "Let forehead rest; soften jaw and shoulders; breathe into back body.",
+      "Hold 1–3 minutes or as comfortable."
+    ],
+    benefits:["Gently stretches hips, thighs, ankles","Releases back tension","Calms the mind"],
+    best:"Anytime; restorative and between challenging poses",
+    uses:["Rest pose","Grounding and calming"]
+  },
+  {
+    nameEN:"Cat–Cow",
+    nameSA:"Marjaryāsana–Bitilāsana",
+    img:"https://static.vecteezy.com/system/resources/previews/006/470/390/original/woman-doing-yoga-cat-cow-stretch-exercise-flat-illustration-isolated-on-white-background-free-vector.jpg",
+    steps:[
+      "Start on all fours; wrists under shoulders, knees under hips.",
+      "Inhale arch (Cow): tail and chest lift, gaze forward.",
+      "Exhale round (Cat): press floor, tuck tail, chin to throat.",
+      "Flow 5–8 rounds with breath, smoothing the spine."
+    ],
+    benefits:["Mobilizes entire spine","Warms shoulders and hips","Connects movement with breath"],
+    best:"Beginning of practice or as a break from sitting",
+    uses:["Spinal warm‑up","Stress relief"]
+  },
+  {
+    nameEN:"Chair Pose",
+    nameSA:"Utkatāsana",
+    img:"https://static.vecteezy.com/system/resources/previews/008/324/438/original/woman-doing-yoga-pose-chair-pose-or-utkatasana-asana-in-hatha-yoga-flat-illustration-isolated-on-white-background-vector.jpg",
+    steps:[
+      "From Tadasana, inhale arms up; exhale bend knees, sit hips back like a chair.",
+      "Keep weight in heels; knees track over toes; chest lifts.",
+      "Draw ribs in; lengthen tailbone; gaze forward.",
+      "Hold 20–40 seconds; breathe; stand to release."
+    ],
+    benefits:["Strengthens legs and glutes","Builds heat and stamina","Tones core"],
+    best:"Morning or early sequence to warm up",
+    uses:["Sun Salutation B","Leg strength work"]
+  },
+  {
+    nameEN:"Camel Pose",
+    nameSA:"Ustrāsana",
+    img:"https://img.freepik.com/vecteurs-premium/sport-masculin-assis-position-ustrasana-isole-fond-blanc-dessin-anime-colore-homme-pratique-camel-pose-illustration-vectorielle-plat-mec-flexible-asana-pratiquant-hatha-yoga_198278-6566.jpg",
+    steps:[
+      "Kneel hip‑width; thighs vertical; hands to low back (fingers down).",
+      "Inhale lift chest; press hips forward over knees.",
+      "Option: reach hands to heels; keep neck long (gaze up or back gently).",
+      "Breathe 20–30 seconds; exit by leading with chest back to kneel."
+    ],
+    benefits:["Opens chest, shoulders, and hip flexors","Strengthens back body","Improves posture and respiration"],
+    best:"Middle of practice when warm",
+    uses:["Heart‑opening sequences","Countering hunching"]
+  },
+  {
+    nameEN:"Low Lunge",
+    nameSA:"Anjaneyāsana",
+    img:"https://entri.app/blog/wp-content/uploads/2023/10/Low-Lunge.jpg",
+    steps:[
+      "From Down Dog, step right foot forward; lower left knee.",
+      "Stack right knee over ankle; slide left knee back to feel front‑thigh stretch.",
+      "Inhale arms up; lengthen through sides; tailbone heavy.",
+      "Hold 30–45 seconds; switch sides."
+    ],
+    benefits:["Opens hip flexors and groin","Builds balance and stability","Relieves lower‑back tightness"],
+    best:"Early or mid‑practice to open hips",
+    uses:["Warm‑up for backbends","Desk‑relief stretch"]
+  },
+  {
+    nameEN:"Bound Angle Pose",
+    nameSA:"Baddha Koṇāsana",
+    img:"https://static.vecteezy.com/system/resources/previews/008/321/576/large_2x/women-silhouette-bound-angle-yoga-pose-baddha-konasana-illustration-vector.jpg",
+    steps:[
+      "Sit tall; bring soles of feet together; let knees open wide.",
+      "Hold ankles or feet; lengthen spine.",
+      "Option: hinge forward slightly from hips while keeping back long.",
+      "Breathe 1–2 minutes; gently release."
+    ],
+    benefits:["Opens inner thighs and groin","Soothes and grounds","Improves hip mobility"],
+    best:"Evening or restorative sequences",
+    uses:["Hip opener","Pre‑meditation seat"]
+  },
+  {
+    nameEN:"Pigeon Pose",
+    nameSA:"Eka Pāda Rajakapotāsana (prep)",
+    img:"https://tse3.mm.bing.net/th/id/OIP.cPc4BXjsT4s5U0vtHfzYHAHaHa?pid=Api&P=0&h=180",
+    steps:[
+      "From Down Dog, bring right knee toward right wrist; shin angled forward.",
+      "Slide left leg back; square hips as best as comfortable.",
+      "Inhale lengthen; exhale fold over front shin on forearms or a block.",
+      "Hold 1–2 minutes; switch sides."
+    ],
+    benefits:["Deeply opens glutes and outer hip","Can relieve low‑back tightness","Calms the nervous system"],
+    best:"After warming up; great in cool‑down",
+    uses:["Hip mobility","Release after running or sitting"]
+  }
+];
+
+// ---------- DOM refs ----------
+const i1 = document.getElementById('interface1');
+const i2 = document.getElementById('interface2');
+const i3 = document.getElementById('interface3');
+const startBtn = document.getElementById('startBtn');
+const yogaList = document.getElementById('yogaList');
+const poseImg = document.getElementById('poseImg');
+const stepsBox = document.getElementById('stepsBox');
+const stepsOl = stepsBox.querySelector('ol');
+const infoToggle = document.getElementById('infoToggle');
+const infoBox = document.getElementById('infoBox');
+const stepImage = document.getElementById('stepImage');
+const stepDesc = document.getElementById('stepDesc');
+const backBtn = document.getElementById('backBtn');
+
+// ---------- Populate list ----------
+POSES.forEach((p, idx)=>{
+  const item = document.createElement('div');
+  item.className = 'yoga-item';
+  item.innerHTML = `
+    <img src="${p.img}" alt="${p.nameEN}"/>
+    <div>
+      <div class="title">${p.nameEN}</div>
+      <div class="sub">${p.nameSA}</div>
+    </div>
+  `;
+  item.addEventListener('click',()=>selectPose(idx));
+  yogaList.appendChild(item);
+});
+
+let currentIndex = -1;
+function selectPose(index){
+  currentIndex = index;
+  const p = POSES[index];
+  poseImg.src = p.img;
+  poseImg.alt = `${p.nameEN} (${p.nameSA})`;
+
+  // Build steps
+  stepsBox.querySelector('h2').textContent = `${p.nameEN} (${p.nameSA}) — Steps`;
+  stepsOl.innerHTML = '';
+  p.steps.forEach((s)=>{
+    const li = document.createElement('li');
+    li.textContent = s;
+    stepsOl.appendChild(li);
+  });
+
+  // Info box content
+  infoBox.innerHTML = `
+    <h3>${p.nameEN} (${p.nameSA})</h3>
+    <h4>Benefits</h4>
+    <ul>${p.benefits.map(b=>`<li>${b}</li>`).join('')}</ul>
+    <h4>Best Time</h4>
+    <p>${p.best}</p>
+    <h4>Best Uses</h4>
+    <ul>${p.uses.map(u=>`<li>${u}</li>`).join('')}</ul>
+  `;
+}
+
+// ---------- Transitions / interactions ----------
+startBtn.addEventListener('click', ()=>{
+  startBtn.classList.remove('ripple'); void startBtn.offsetWidth; startBtn.classList.add('ripple');
+  i1.style.opacity = 0;
+  setTimeout(()=>{ i1.classList.add('hidden'); i2.classList.remove('hidden'); setTimeout(()=>{i2.style.opacity=1; i2.style.pointerEvents='auto';}, 40); }, 600);
+});
+
+infoToggle.addEventListener('click', ()=>{
+  infoBox.classList.toggle('show');
+});
+
+poseImg.addEventListener('click', ()=>{
+  if(currentIndex<0) return;
+  const p = POSES[currentIndex];
+  i2.style.opacity=0;
+  setTimeout(()=>{
+    i2.classList.add('hidden');
+    i3.classList.remove('hidden');
+    stepImage.src = p.img;
+    stepImage.alt = `${p.nameEN} (${p.nameSA})`;
+    stepDesc.textContent = `${p.nameEN} (${p.nameSA})`;
+    setTimeout(()=>{ i3.style.opacity=1; i3.style.pointerEvents='auto'; }, 40);
+  }, 350);
+});
+
+backBtn.addEventListener('click', ()=>{
+  i3.style.opacity=0;
+  setTimeout(()=>{ i3.classList.add('hidden'); i2.classList.remove('hidden'); setTimeout(()=>{ i2.style.opacity=1; i2.style.pointerEvents='auto'; }, 40); }, 350);
+});
+
+// Select first pose by default
+selectPose(0);
+</script>
+</body>
+</html>
