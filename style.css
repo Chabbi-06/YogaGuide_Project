@@ -1,0 +1,67 @@
+:root{
+  --bg:#f3f5f7;
+  --panel:#e8f0fb;
+  --panel-2:#eef5ff;
+  --ink:#233044;
+  --muted:#5e6a7a;
+  --primary:#2d7ff9;
+  --accent:#9ec6ff;
+  --danger:#d94a4a;
+  --ring:rgba(45,127,249,.25);
+  --purple:#ede7f6; /* light purple */
+}
+*{box-sizing:border-box;}
+html,body{height:100%; margin:10; font-family:Sitka Display,Helvetica,sans-serif; background:var(--bg); color:var(--ink); overflow:hidden;}
+img{max-width:100%; display:block;}
+button{font:inherit;}
+.hidden{display:none;}
+
+.interface{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; transition:opacity .7s ease;}
+
+/* Interface 1 */
+#interface1{position:relative; background:var(--purple);}
+.hero{position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; gap:100px;}
+.logo{width:300px; height:300px; border-radius:300%; display:flex; justify-content:center; align-items:center; background:linear-gradient(180deg,#6c458e,#c7ddff); box-shadow:10 24px 32px rgba(0, 0, 0, 0.15);}
+.logo span{font-size:55px;}
+h1{margin:80; font-size:clamp(32px,5vw,48px); letter-spacing:1px; color:#7e4cad;}
+.start-btn{padding:20px 40px; border:1; border-radius:999px; background:linear-gradient(180deg,#6c458e,#c7ddff); color:#ffffff; cursor:pointer; transform:translateZ(0); transition:transform .50s ease, box-shadow .25s ease;}
+.start-btn:hover{transform:scale(1.05);}
+.start-btn:active{transform:scale(1.97);}
+.start-btn.ripple{box-shadow:1 1 1 2 var(--ring); animation:ripple .6s forwards;}
+@keyframes ripple{to{box-shadow:10 10 10 10px rgba(164, 106, 211, 0);}}
+
+/* Interface 2 */
+#interface2{flex-direction:row; gap:0; padding:clamp(8px,1.5vw,20px); opacity:0; pointer-events:none;}
+.yoga-list{width:28%; max-width:420px; min-width:240px; height:100%; overflow:auto; background:var(--panel); border:1px solid #cfe0ff; border-radius:16px; padding:8px;}
+.yoga-item{display:flex; align-items:center; gap:10px; padding:10px; border-radius:10px; cursor:pointer; transition:background .2s ease, transform .2s ease;}
+.yoga-item:hover{background:#d7e7ff;}
+.yoga-item.active{background:#c7dcff; transform:scale(1.03);}
+.yoga-item img{width:44px; height:44px; object-fit:cover; border-radius:8px; flex:0 0 44px;}
+.yoga-item .title{font-weight:700;}
+.yoga-item .sub{font-size:12px; color:var(--muted);}
+
+.yoga-portal{position:relative; flex:1; height:100%; display:flex; flex-direction:column; gap:12px; background:var(--panel-2); border:1px solid #d6e4ff; border-radius:16px; padding:clamp(10px,2vw,20px); overflow:auto;}
+.pose-img{align-self:center; width:min(860px,92%); border-radius:14px; box-shadow:0 6px 18px rgba(0,0,0,.08); cursor:pointer; transition:opacity .4s ease;}
+.steps{width:min(860px,92%); margin-inline:auto; background:#fff; border:1px solid #ebf0f7; border-radius:14px; padding:16px 18px; box-shadow:0 6px 16px rgba(0,0,0,.05); transition:opacity .4s ease, transform .4s ease;}
+.steps h2{margin:0 0 8px 0; font-size:18px; color:#143a6b;}
+.steps.slide-in{transform:translateX(0); opacity:1;}
+.steps ol{margin:0; padding-left:18px; line-height:1.5;}
+
+.info-btn{position:absolute; top:12px; right:12px; background:var(--primary); color:#fff; border:0; border-radius:10px; padding:8px 12px; cursor:pointer;}
+.info-box{position:absolute; top:54px; right:-340px; width:min(320px,85vw); background:#fff; border:1px solid #d6e4ff; border-radius:14px; box-shadow:0 12px 30px rgba(0,0,0,.12); padding:14px 16px; transition:right .45s ease, transform .4s ease, opacity .4s ease; opacity:0; transform:translateX(20px);}
+.info-box.show{right:12px; opacity:1; transform:translateX(0);}
+
+.info-box h3{margin:.25rem 0 .5rem 0; color:#0f3c75;}
+.info-box h4{margin:.5rem 0 .25rem 0; color:#244b82;}
+.info-box ul{margin:.25rem 0 .5rem 0; padding-left:18px;}
+
+/* Interface 3 */
+#interface3{background:rgba(10,20,30,.85); backdrop-filter:blur(2px); opacity:0; pointer-events:none;}
+.zoom-card{max-width:min(92vw,980px); max-height:92vh; display:flex; flex-direction:column; align-items:center; gap:12px; background:#fff; border-radius:16px; padding:16px;}
+#stepImage{max-height:70vh; width:auto; border-radius:12px;}
+#stepDesc{margin:0; color:#2a3d56;}
+.back-btn{padding:10px 18px; border:0; border-radius:10px; background:var(--danger); color:#fff; cursor:pointer;}
+
+/* Responsive tweaks */
+@media (max-width:900px){ .yoga-list{width:36%} }
+@media (max-width:720px){ #interface2{flex-direction:column;} .yoga-list{width:100%; max-width:none; min-width:0; height:40%;} .yoga-portal{height:60%;} }
