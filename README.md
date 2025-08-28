@@ -1,6 +1,6 @@
 # YogaGuide_Project
 This is a simple website to guide people for doing basic yoga for their better health.It basically have three interfaces.
-<br?
+<br>
 Technology stack: Pure HTML, CSS, and JavaScript (no frameworks).
 <br>
 Working:- 
