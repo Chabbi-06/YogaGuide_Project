@@ -18,4 +18,6 @@ I add a icon button also, that tells the some additional information about that 
 While making it I face some challenges like balancing the size ratio, and adding the pop-up animation. 
 And Each yoga pose has unique steps + benefits.
 To avoid long static HTML, had to store them in JavaScript objects and load dynamically.
-But overall it's a good experience and I learned a lot while making this project
+But overall it's a good experience and I learned a lot while making this project.
+<br>
+link for the website : -  https://chabbi-06.github.io/YogaGuide_Project/
